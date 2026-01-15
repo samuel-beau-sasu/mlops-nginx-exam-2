@@ -69,4 +69,64 @@ curl http://X-Experiment-Group:8080/debug \
 # 4. Sécurité et Monitoring
 
 
+## test predict 
+make start-project
 
+# Commande 1 : HTTP sur port 80 (sera redirigé vers HTTPS)
+curl -X POST "https://localhost/predict" \
+     -H "Content-Type: application/json" \
+     -d '{"sentence": "Oh yeah, that was not cool!"}' \
+     --cacert ./deployments/nginx/certs/nginx.crt;
+
+curl -L --post301 -X POST "http://localhost:8080/predict" \
+     -H "Content-Type: application/json" \
+     -d '{"sentence": "Oh yeah, that was not cool!"}' \
+     --cacert ./deployments/nginx/certs/nginx.crt;
+
+# Commande 2 : Avec l'en-tête X-Experiment-Group
+curl -X POST "https://localhost/predict" \
+     -H "Content-Type: application/json" \
+     -H "X-Experiment-Group: debug" \
+     -d '{"sentence": "Oh yeah, that was soooo cool!"}' \
+     --cacert ./deployments/nginx/certs/nginx.crt;
+
+curl -L --post301 -X POST "http://localhost:8080/predict" \
+     -H "Content-Type: application/json" \
+     -H "X-Experiment-Group: debug" \
+     -d '{"sentence": "Oh yeah, that was soooo cool!"}' \
+     --cacert ./deployments/nginx/certs/nginx.crt;
+
+
+make stop-project
+
+# Authentification et Contrôle d'accès
+
+## Pour générer le fichier htpasswd nous utiliserons la commande suivante : 
+
+htpasswd -c deployments/nginx/.htpasswd admin
+
+htpasswd deployments/nginx/.htpasswd username
+
+
+## test predict 
+make start-project
+make stop-project
+
+--user admin:admin \
+
+### Commande 1 : HTTP sur port 80 (sera redirigé vers HTTPS)
+curl -X POST "https://localhost/predict" \
+     -H "Content-Type: application/json" \
+     -d '{"sentence": "Oh yeah, that was not cool!"}' \
+     --user admin:admin \
+     --cacert ./deployments/nginx/certs/nginx.crt;
+
+### Commande 2 : Avec l'en-tête X-Experiment-Group
+curl -X POST "https://localhost/predict" \
+     -H "Content-Type: application/json" \
+     -H "X-Experiment-Group: debug" \
+     -d '{"sentence": "Oh yeah, that was soooo cool!"}' \
+     --user admin:admin \
+     --cacert ./deployments/nginx/certs/nginx.crt;
+
+# Rate Limiting et protection DDoS avec NGINX
