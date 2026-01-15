@@ -19,7 +19,7 @@ stop-project:
 	docker compose -p mlops down -v
 
 run-project:
-	# run project
+	docker compose -p mlops up -d --build
 	@echo "Grafana UI: http://localhost:3000"
 
 test:
@@ -31,6 +31,6 @@ help:
 	@echo "run-api			: Lancer le conteneur"
 	@echo "stop-api		: Arrêter/supprimer conteneur"
 	@echo "test			: test de l'api"
-	@echo "run-project		: run du projet"
+	@echo "run-project		: run projet - info Grafana"
 	@echo "start-project		: Démmarer le projet"
 	@echo "stop-project		: Arréter le projet"

@@ -322,7 +322,29 @@ build-api               : Construire l'image
 run-api                 : Lancer le conteneur
 stop-api                : Arrêter/supprimer conteneur
 test                    : test de l'api
-run-project             : run du projet
+run-project             : run projet - info Grafana
 start-project           : Démmarer le projet
 stop-project            : Arréter le projet
+```
+A partir du répertoire : mlops-nginx-exam-2. 
+
+On lance le projet avec 
+
+```sh
+make run-project  
+```
+ou   
+```sh         
+make start-project     
+```
+On arrête le projet avec 
+ 
+```sh         
+make stop-project    
+```
+
+les tests sont fait avec 
+
+```sh         
+make test   
 ```
