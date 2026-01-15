@@ -267,3 +267,62 @@ You must submit a `.zip` or `.tar.gz` archive containing your entire project, in
 Good luck! 🚀
 
 </details>
+
+## Instructions pour l'Examen 
+
+#### Architecture Cible
+
+On a une architecture Reverse Proxy , exactement celle demandée dans l'exercice :
+
+Nginx sert de passerelle centrale, gérant le trafic vers les différentes versions de l'API et exposant les métriques pour le monitoring.
+
+```mermaid
+graph TD
+    subgraph "Utilisateur"
+        U[Client] -->|Requête HTTPS| N
+    end
+
+    subgraph "Infrastructure Conteneurisée (Docker)"
+        N[Nginx Gateway] -->|Load Balancing| V1
+        N -->|"A/B Test (Header)"| V2
+
+        subgraph "API v1 (Scalée)"
+            V1[Upstream: api-v1]
+            V1_1[Replica 1]
+            V1_2[Replica 2]
+            V1_3[Replica 3]
+            V1 --- V1_1
+            V1 --- V1_2
+            V1 --- V1_3
+        end
+
+        subgraph "API v2 (Debug)"
+            V2[Upstream: api-v2]
+        end
+
+        subgraph "Stack de Monitoring"
+            N -->|/nginx_status| NE[Nginx Exporter]
+            NE -->|Métriques| P[Prometheus]
+            P -->|Source de données| G[Grafana]
+            U_Grafana[Admin] -->|Consulte Dashboards| G
+        end
+    end
+
+    style N fill:#269539,stroke:#333,stroke-width:2px,color:#fff
+    style G fill:#F46800,stroke:#333,stroke-width:2px,color:#fff
+    style P fill:#E6522C,stroke:#333,stroke-width:2px,color:#fff
+```
+
+Pour avoir toutes les instructions disponible du makefile il faut entrer la ligne de commande: 
+
+```sh
+$ make help
+
+build-api               : Construire l'image
+run-api                 : Lancer le conteneur
+stop-api                : Arrêter/supprimer conteneur
+test                    : test de l'api
+run-project             : run du projet
+start-project           : Démmarer le projet
+stop-project            : Arréter le projet
+```
