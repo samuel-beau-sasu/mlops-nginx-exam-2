@@ -1,2 +1,3 @@
 .venv/
 deployments/nginx/certs/nginx.key
+Notes.md
