@@ -22,18 +22,15 @@ run-project:
 	# run project
 	@echo "Grafana UI: http://localhost:3000"
 
-test-api:
-	curl -X POST "https://localhost/predict" \
-     -H "Content-Type: application/json" \
-     -d '{"sentence": "Oh yeah, that was soooo cool!"}' \
-	 --user admin:admin \
-     --cacert ./deployments/nginx/certs/nginx.crt;
+test:
+	sh tests/run_tests.sh
+
 
 help:
 	@echo "build-api		: Construire l'image"
 	@echo "run-api			: Lancer le conteneur"
 	@echo "stop-api		: Arrêter/supprimer conteneur"
-	@echo "test-api		: test de l'api"
+	@echo "test			: test de l'api"
 	@echo "run-project		: run du projet"
 	@echo "start-project		: Démmarer le projet"
 	@echo "stop-project		: Arréter le projet"

@@ -130,3 +130,40 @@ curl -X POST "https://localhost/predict" \
      --cacert ./deployments/nginx/certs/nginx.crt;
 
 # Rate Limiting et protection DDoS avec NGINX
+
+make start-project
+make stop-project
+
+for i in {1..20}; \
+        do curl -s -o /dev/null -w "%{http_code}\n" \
+        -X POST "https://localhost/predict" -H "Content-Type: application/json" \
+        -d '{"sentence": "Oh yeah, that was soooo cool!"}' \
+        --user "admin:admin" \
+        --cacert ./deployments/nginx/certs/nginx.crt; \
+    done
+
+for i in {1..20}; \
+        do curl -s -o /dev/null -w "%{http_code}\n" \
+        -X POST "https://localhost/predict" -H "Content-Type: application/json" \
+        -H "X-Experiment-Group: debug" \
+        -d '{"sentence": "Oh yeah, that was soooo cool!"}' \
+        --user "admin:admin" \
+        --cacert ./deployments/nginx/certs/nginx.crt; \
+    done
+
+
+docker ps
+docker logs -f 29a0839842b8
+
+# A/B Testing : Vous déploierez deux versions de l'API.
+
+make start-project
+make stop-project
+
+
+# Monitoring avec Prometheus et Grafana
+
+make start-project
+make stop-project
+
+http://63.34.195.24:3000
